@@ -36,27 +36,88 @@ class V1 extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
+
+	function validation_input($config, $data){
+		$this->form_validation->set_data($data);
+		$this->form_validation->set_rules($config);
+
+		if($this->form_validation->run()==FALSE){
+			$response = array(
+				'status' => 400,
+				'error' => $this->form_validation->error_array()
+			);
+			$this->response($response, 400);
+			exit();
+		}
+	}
+
+
 	function register_post() {
+		$config = [
+			[
+				'field' => 'email',
+				'label' => 'Email',
+				'rules' => 'required|max_length[50]|valid_email|is_unique[users.email]',
+				'errors' => [
+					'required' => 'You must provide an email',
+					'max_length' => 'Maximum Email length is 50 characters',
+					'valid_email' => 'Email not valid',
+					'is_unique' => 'Email already taken, use another email.'
+				],
+			],
+			[
+				'field' => 'name',
+				'label' => 'Name',
+				'rules' => 'required|max_length[50]',
+				'errors' => [
+					'required' => 'You must provide a name.',
+					'max_length' => 'Maximum Name length is 50 characters',
+				],
+			],
+			[
+				'field' => 'telp',
+				'label' => 'Telp',
+				'rules' => 'required|is_natural|max_length[15]|is_unique[users.telp]',
+				'errors' => [
+					'required' => 'You must provide a telephone number.',
+					'is_natural' => 'Only contains numbers',
+					'max_length' => 'Maximum Telp length is 15 characters',
+					'is_unique' => 'Telp Number already taken, use another telp number.',
+				],
+			],
+			[
+				'field' => 'password',
+				'label' => 'Password',
+				'rules' => 'required|min_length[8]',
+				'errors' => [
+					'required' => 'You must provide a Password.',
+					'min_length' => 'Minimum Password length is 8 characters.',
+				],
+			],
+		];
+		
+		$data = $this->input->post();
+		
+		$this->validation_input($config, $data);
+		
+		// if valid input
 		$data['email'] = $this->post('email');
 		$data['name'] = $this->post('name');
 		$data['telp'] = $this->post('telp');
-		$data['password'] = $this->post('password');
-
-		$tokenData['email'] = $data['email'];
-		$tokenData['password'] = $data['password'];
+		$data['password'] = md5($this->post('password'));
 
 		if ($this->Usermodel->register($data)){
 			$response =[
 				'status' => 200,
-				'msg' => 'Request Successful !'
+				'message' => 'Request Successful !'
 			];
 			$this->response($response, 200);
 		} else {
 			$response = [
-				'status' => 401,
-				'msg'	=> 'Request Failed !'
+				'status' => 400,
+				'message' => 'Request Failed !'
 			];
-			$this->response($response, 401);
+			$this->response($response, 400);
 		}
 	}
 
@@ -84,21 +145,19 @@ class V1 extends CI_Controller {
 		
 		$data = $this->input->post();
 		
-		$this->form_validation->set_data($data);
-		$this->form_validation->set_rules($config);
+		$this->validation_input($config, $data);
 
-		if($this->form_validation->run()==FALSE){
-			$this->response($this->form_validation->error_array(), 400);
-			exit();
-		}
-
-
-		///
+		// if valid input
 		$data['email'] = $this->post('email');
-		$data['password'] = $this->post('password');
+		$data['password'] = md5($this->post('password'));
 
-		if ($this->Usermodel->select_user($data)->num_rows() == 1){
-			$token = AUTHORIZATION::generateToken($data);
+		$user = $this->Usermodel->select_user($data);
+		if ($user->num_rows() == 1){
+			$tokenData = array(
+				'userId' => $user->row()->userId,
+				'email' => $user->row()->email,
+			);
+			$token = AUTHORIZATION::generateToken($tokenData);
 			$response = array(
 				'status' => 200,
 				'message' => 'Login Successful !',
@@ -116,44 +175,48 @@ class V1 extends CI_Controller {
 		}
 
 	}
+
+	function cektoken_post(){
+		$data = $this->verify_request();
+		echo json_encode($data);
+	}
 	
-	private function verify_request()
-	{
-    // Get all the headers
-    $headers = $this->input->request_headers();
-    // Extract the token
-    $token = $headers['Authorization'];
-    // Use try-catch
-    // JWT library throws exception if the token is not valid
-    try {
-        // Validate the token
-        // Successfull validation will return the decoded user data else returns false
-        $data = AUTHORIZATION::validateToken($token);
-        if ($data === false) {
-            $status = 401;
-            $response = ['status' => $status, 'msg' => 'Unauthorized Access!'];
-            $this->response($response, $status);
-            exit();
-        } else {
-			$user = [
-				"email"	=> $data->email,
-				"password" => $data->password
-			];
-			if ($this->Usermodel->select_user($user)->num_rows() == 1){
-				return $data;
-			} else {
+	private function verify_request() {
+		// Get all the headers
+		$headers = $this->input->request_headers();
+		// Extract the token
+		$token = $headers['Authorization'];
+		// Use try-catch
+		// JWT library throws exception if the token is not valid
+		try {
+			// Validate the token
+			// Successfull validation will return the decoded user data else returns false
+			$data = AUTHORIZATION::validateToken($token);
+			if ($data === false) {
 				$status = 401;
-            	$response = ['status' => $status, 'msg' => 'Unauthorized Access!'];
-            	$this->response($response, $status);
-            	exit();
+				$response = ['status' => $status, 'msg' => 'Unauthorized Access!'];
+				$this->response($response, $status);
+				exit();
+			} else {
+				$user = [
+					"userId"=> $data->userId,
+					"email" => $data->email
+				];
+				if ($this->Usermodel->select_user($user)->num_rows() == 1){
+					return $data;
+				} else {
+					$status = 401;
+					$response = ['status' => $status, 'msg' => 'Unauthorized Access!'];
+					$this->response($response, $status);
+					exit();
+				}
 			}
-        }
-    } catch (Exception $e) {
-        // Token is invalid
-        // Send the unathorized access message
-        $status = 401;
-        $response = ['status' => $status, 'msg' => 'Unauthorized Access! '];
-        $this->response($response, $status);
-    }
-}
+		} catch (Exception $e) {
+			// Token is invalid
+			// Send the unathorized access message
+			$status = 401;
+			$response = ['status' => $status, 'msg' => 'Unauthorized Access! '];
+			$this->response($response, $status);
+		}
+	}
 }
