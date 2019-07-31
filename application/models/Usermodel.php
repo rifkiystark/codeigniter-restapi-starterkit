@@ -13,4 +13,10 @@ class Usermodel extends CI_Model {
         $this->db->where($data);
         return $this->db->get('users');
     }
+
+    function registertech($data){
+        $data['role'] = "technician";
+
+        return $this->db->insert('users', $data);
+    }
 }

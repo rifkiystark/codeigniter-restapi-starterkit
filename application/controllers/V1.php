@@ -219,4 +219,103 @@ class V1 extends CI_Controller {
 			$this->response($response, $status);
 		}
 	}
+
+	function registertech_post() {
+		$config = [
+			[
+				'field' => 'type',
+				'label' => 'Service Category',
+				'rules' => 'required',
+				'errors' => [
+					'required' => 'You must provide a service category'
+				],
+			],
+			[
+				'field' => 'email',
+				'label' => 'Email',
+				'rules' => 'required|max_length[50]|valid_email|is_unique[users.email]',
+				'errors' => [
+					'required' => 'You must provide an email',
+					'max_length' => 'Maximum Email length is 50 characters',
+					'valid_email' => 'Email not valid',
+					'is_unique' => 'Email already taken, use another email.'
+				],
+			],
+			[
+				'field' => 'name',
+				'label' => 'Name',
+				'rules' => 'required|max_length[50]',
+				'errors' => [
+					'required' => 'You must provide a name.',
+					'max_length' => 'Maximum Name length is 50 characters',
+				],
+			],
+			[
+				'field' => 'telp',
+				'label' => 'Telp',
+				'rules' => 'required|is_natural|max_length[15]|is_unique[users.telp]',
+				'errors' => [
+					'required' => 'You must provide a telephone number.',
+					'is_natural' => 'Only contains numbers',
+					'max_length' => 'Maximum Telp length is 15 characters',
+					'is_unique' => 'Telp Number already taken, use another telp number.'
+				],
+			],
+			[
+				'field' => 'identityNumber',
+				'label' => 'KTP Number',
+				'rules' => 'required|is_natural|max_length[30]|is_unique[users.identityNumber]',
+				'errors' => [
+					'required' => 'You must provide a KTP number.',
+					'is_natural' => 'Only contains numbers',
+					'max_length' => 'Maximum KTP length is 30 characters',
+					'is_unique' => 'KTP number already taken.'
+				],
+			],
+			[
+				'field' => 'identityPhoto',
+				'label' => 'KTP Scan',
+				'rules' => 'required',
+				'errors' => [
+					'required' => 'You must provide a KTP scan.'
+				],
+			],
+			[
+				'field' => 'password',
+				'label' => 'Password',
+				'rules' => 'required|min_length[8]',
+				'errors' => [
+					'required' => 'You must provide a Password.',
+					'min_length' => 'Minimum Password length is 8 characters.',
+				],
+			],
+		];
+		
+		$data = $this->input->post();
+		
+		$this->validation_input($config, $data);
+		
+		// if valid input
+		$data['type'] = $this->post('type');
+		$data['email'] = $this->post('email');
+		$data['name'] = $this->post('name');
+		$data['telp'] = $this->post('telp');
+		$data['identityNumber'] = $this->post('identityNumber');
+		$data['identityPhoto'] = $this->post('identityPhoto');
+		$data['password'] = md5($this->post('password'));
+
+		if ($this->Usermodel->registertech($data)){
+			$response =[
+				'status' => 200,
+				'message' => 'Request Successful !'
+			];
+			$this->response($response, 200);
+		} else {
+			$response = [
+				'status' => 400,
+				'message' => 'Request Failed !'
+			];
+			$this->response($response, 400);
+		}
+	}
 }
