@@ -79,7 +79,7 @@ $db['default'] = array(
 	'username' => 'rifkiystark@gawe',
 	'password' => 'Wakwaw123;',
 	'database' => 'gawedb',
-	'dbdriver' => 'mysql',
+	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => (ENVIRONMENT !== 'production'),
