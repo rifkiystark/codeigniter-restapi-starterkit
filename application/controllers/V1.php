@@ -1,23 +1,27 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 use Restserver\Libraries\REST_Controller;
 
 require APPPATH . '/libraries/REST_Controller.php';
 require APPPATH . '/libraries/Format.php';
 
-class V1 extends CI_Controller {
+class V1 extends CI_Controller
+{
 
 	use REST_Controller {
-        REST_Controller::__construct as private __resTraitConstruct;
-    }
+	REST_Controller::__construct as private __resTraitConstruct;
+	}
+
+	
 	function __construct()
-    {
-        // Construct the parent class
-        parent::__construct();
+	{
+		// Construct the parent class
+		parent::__construct();
 		$this->__resTraitConstruct();
-		$this->load->model(array('Usermodel'));
+		$this->load->model(array('Usermodel', 'Techniciansmodel'));
 		$this->load->helper(['jwt', 'authorization']);
+		$this->base_url = "http://localhost//gawe-api/";
 	}
 
 
@@ -37,11 +41,12 @@ class V1 extends CI_Controller {
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
 
-	function validation_input($config, $data){
+	function validation_input($config, $data)
+	{
 		$this->form_validation->set_data($data);
 		$this->form_validation->set_rules($config);
 
-		if($this->form_validation->run()==FALSE){
+		if ($this->form_validation->run() == FALSE) {
 			$response = array(
 				'status' => 400,
 				'error' => $this->form_validation->error_array()
@@ -52,7 +57,8 @@ class V1 extends CI_Controller {
 	}
 
 
-	function register_post() {
+	function register_post()
+	{
 		$config = [
 			[
 				'field' => 'email',
@@ -95,19 +101,19 @@ class V1 extends CI_Controller {
 				],
 			],
 		];
-		
+
 		$data = $this->input->post();
-		
+
 		$this->validation_input($config, $data);
-		
+
 		// if valid input
 		$data['email'] = $this->post('email');
 		$data['name'] = $this->post('name');
 		$data['telp'] = $this->post('telp');
 		$data['password'] = md5($this->post('password'));
 
-		if ($this->Usermodel->register($data)){
-			$response =[
+		if ($this->Usermodel->register($data)) {
+			$response = [
 				'status' => 200,
 				'message' => 'Request Successful !'
 			];
@@ -121,30 +127,31 @@ class V1 extends CI_Controller {
 		}
 	}
 
-	private function login_post(){
+	private function login_post()
+	{
 		$config = [
 			[
-					'field' => 'email',
-					'label' => 'Email',
-					'rules' => 'required|max_length[50]|valid_email',
-					'errors' => [
-							'required' => 'We need both username and password',
-							'max_length' => 'Maximum Email length is 50 characters',
-							'valid_email' => 'Email not valid',
-					],
+				'field' => 'email',
+				'label' => 'Email',
+				'rules' => 'required|max_length[50]|valid_email',
+				'errors' => [
+					'required' => 'We need both username and password',
+					'max_length' => 'Maximum Email length is 50 characters',
+					'valid_email' => 'Email not valid',
+				],
 			],
 			[
-					'field' => 'password',
-					'label' => 'Password',
-					'rules' => 'required',
-					'errors' => [
-							'required' => 'You must provide a Password.',
-					],
+				'field' => 'password',
+				'label' => 'Password',
+				'rules' => 'required',
+				'errors' => [
+					'required' => 'You must provide a Password.',
+				],
 			],
 		];
-		
+
 		$data = $this->input->post();
-		
+
 		$this->validation_input($config, $data);
 
 		// if valid input
@@ -152,7 +159,7 @@ class V1 extends CI_Controller {
 		$data['password'] = md5($this->post('password'));
 
 		$user = $this->Usermodel->select_user($data);
-		if ($user->num_rows() == 1){
+		if ($user->num_rows() == 1) {
 			$tokenData = array(
 				'userId' => $user->row()->userId,
 				'email' => $user->row()->email,
@@ -171,17 +178,17 @@ class V1 extends CI_Controller {
 				'message' => 'Email or Password did not match !'
 			);
 			$this->response($response, 400);
-
 		}
-
 	}
 
-	function cektoken_post(){
+	function cektoken_post()
+	{
 		$data = $this->verify_request();
 		echo json_encode($data);
 	}
-	
-	private function verify_request() {
+
+	private function verify_request()
+	{
 		// Get all the headers
 		$headers = $this->input->request_headers();
 		// Extract the token
@@ -199,10 +206,10 @@ class V1 extends CI_Controller {
 				exit();
 			} else {
 				$user = [
-					"userId"=> $data->userId,
+					"userId" => $data->userId,
 					"email" => $data->email
 				];
-				if ($this->Usermodel->select_user($user)->num_rows() == 1){
+				if ($this->Usermodel->select_user($user)->num_rows() == 1) {
 					return $data;
 				} else {
 					$status = 401;
@@ -220,12 +227,22 @@ class V1 extends CI_Controller {
 		}
 	}
 
-	function registertech_post() {
+	function registertech_post()
+	{
+
+		//	gettechnicianId for validation
+		$technicians = $this->Techniciansmodel->select();
+		$technicianId = "";
+		for ($i = 0; $i < $technicians->num_rows(); $i++) {
+			$tmpId = (string) $technicians->result()[$i]->technicianId;
+			$technicianId .= $tmpId . ",";
+		}
+
 		$config = [
 			[
 				'field' => 'type',
 				'label' => 'Service Category',
-				'rules' => 'required',
+				'rules' => 'required|is_numeric|in_list[' . $technicianId . ']',
 				'errors' => [
 					'required' => 'You must provide a service category'
 				],
@@ -275,9 +292,17 @@ class V1 extends CI_Controller {
 			[
 				'field' => 'identityPhoto',
 				'label' => 'KTP Scan',
-				'rules' => 'required',
+				'rules' => '',
 				'errors' => [
-					'required' => 'You must provide a KTP scan.'
+					
+				],
+			],
+			[
+				'field' => 'balance',
+				'label' => 'Balance',
+				'rules' => 'required|is_numeric',
+				'errors' => [
+					'required' => 'You must provide a Password.',
 				],
 			],
 			[
@@ -290,10 +315,29 @@ class V1 extends CI_Controller {
 				],
 			],
 		];
-		
-		$data = $this->input->post();
-		
+
+		$data = $this->input->post(); 
 		$this->validation_input($config, $data);
+
+		$configUpload = array(
+			'upload_path' => "./identities/",
+			'allowed_types' => "jpg|png|jpeg",
+			'overwrite' => TRUE,
+			'max_size' => "4096",
+			'file_name' => $this->post('identityNumber')
+		);
+
+		$this->load->library('upload', $configUpload);
+		$this->upload->initialize($configUpload);
+
+		if (!$this->upload->do_upload('identityPhoto')) {
+			$error = array('error' => $this->upload->display_errors());
+
+			$this->response($error, 401);
+			exit();
+		} else {
+			$dataGambar = $this->upload->data();
+		}
 		
 		// if valid input
 		$data['type'] = $this->post('type');
@@ -301,11 +345,11 @@ class V1 extends CI_Controller {
 		$data['name'] = $this->post('name');
 		$data['telp'] = $this->post('telp');
 		$data['identityNumber'] = $this->post('identityNumber');
-		$data['identityPhoto'] = $this->post('identityPhoto');
+		$data['identityPhoto'] = $dataGambar['file_name'];
 		$data['password'] = md5($this->post('password'));
 
-		if ($this->Usermodel->registertech($data)){
-			$response =[
+		if ($this->Usermodel->registertech($data)) {
+			$response = [
 				'status' => 200,
 				'message' => 'Request Successful !'
 			];
