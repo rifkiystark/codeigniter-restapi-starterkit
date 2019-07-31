@@ -333,7 +333,7 @@ class V1 extends CI_Controller
 		if (!$this->upload->do_upload('identityPhoto')) {
 			$error = array('error' => $this->upload->display_errors());
 
-			$this->response($error, 401);
+			$this->response($error, 400);
 			exit();
 		} else {
 			$dataGambar = $this->upload->data();
