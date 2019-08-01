@@ -12,6 +12,4 @@ class Verificationsmodel extends CI_Model {
         $this->db->where($data);
         return $this->db->get('verifications');
     }
-
-    
 }
