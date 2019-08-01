@@ -12,4 +12,9 @@ class Verificationsmodel extends CI_Model {
         $this->db->where($data);
         return $this->db->get('verifications');
     }
+
+    function delete_where($where){
+        $this->db->where($where);
+        return $this->db->delete('verifications');
+    }
 }

@@ -70,6 +70,7 @@ class V1 extends CI_Controller
 			);
 
 			$this->Usermodel->update_user($where, $dataupdate);
+			$this->Verificationsmodel->delete_where($data);
 			$response = [
 				'status' => 200,
 				'message' => 'Request Succesed !'
