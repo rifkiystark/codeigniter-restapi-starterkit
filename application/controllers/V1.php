@@ -137,7 +137,7 @@ class V1 extends CI_Controller
 		// SMTP Username like. (abc@gmail.com)
 		$config['smtp_user'] = 'ananda.rifkiy33@gmail.com';
 		// SMTP Password like (abc***##)
-		$config['smtp_pass'] = '100%ganteng';
+		$config['smtp_pass'] = 'wakwaw123';
 		// Load email library and passing configured values to email library
 		$this->load->library('email', $config);
 		// Sender email address
