@@ -59,8 +59,6 @@ class V1 extends CI_Controller
 	function verifications_post(){
 		$data['userId'] = $this->post('userid');
 		$data['code'] = $this->post('code');
-
-		echo json_encode($data);
 		
 		$verifdata = $this->Verificationsmodel->select_where($data);
 		if ($verifdata->num_rows() == 1){
@@ -74,7 +72,7 @@ class V1 extends CI_Controller
 			$this->Usermodel->update_user($where, $dataupdate);
 			$response = [
 				'status' => 200,
-				'message' => 'Request Failed !'
+				'message' => 'Request Succesed !'
 			];
 			$this->response($response, 200);
 
