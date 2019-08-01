@@ -130,7 +130,7 @@ class V1 extends CI_Controller
 
 	function email_post(){
 		$config['protocol'] = 'smtp';
-		$config['smtp_host'] = 'ssl://smtp.gmail.com';
+		$config['smtp_host'] = 'smtp.gmail.com';
 		$config['smtp_port'] = 465;
 		$config['mailtype'] = 'html';
 		$config['smtp_user'] = 'ananda.rifkiy33@gmail.com';
