@@ -19,7 +19,7 @@ class V1 extends CI_Controller
 		// Construct the parent class
 		parent::__construct();
 		$this->__resTraitConstruct();
-		$this->load->model(array('Usermodel', 'Techniciansmodel'));
+		$this->load->model(array('Usermodel', 'Techniciansmodel','Verificationsmodel'));
 		$this->load->helper(['jwt', 'authorization']);
 		$this->base_url = "http://localhost//gawe-api/";
 	}
@@ -114,6 +114,25 @@ class V1 extends CI_Controller
 		$data['password'] = md5($this->post('password'));
 
 		if ($this->Usermodel->register($data)) {
+
+			$length = 6;
+			$characters = '0123456789';
+			$charactersLength = strlen($characters);
+			$unique_kode = '';
+			for ($i = 0; $i < $length; $i++) {
+				$unique_kode .= $characters[rand(0, $charactersLength - 1)];
+			}
+			
+			$iduser = $this->Usermodel->select_user($data)->rows('iduser');
+			$verifdata = array (
+				'userId' => $iduser,
+				'code'	=> $unique_kode
+			);
+
+			$this->Verifivationsmodel->insert($verifdata);
+			$this->email($data['email'], $unique_kode);
+			
+
 			$response = [
 				'status' => 200,
 				'message' => 'Request Successful !'
@@ -128,7 +147,7 @@ class V1 extends CI_Controller
 		}
 	}
 
-	function email_post(){
+	function email($to, $msg){
 		$config = [
 			'mailtype'  => 'html',
 			'charset'   => 'utf-8',
@@ -145,16 +164,16 @@ class V1 extends CI_Controller
 		// Sender email address
 		$this->email->from('ananda.rifkiy33@gmail.com', 'ananda.rifkiy33@gmail.com');
 		//send multiple email
-		$this->email->to('ananda.rifkiy32@gmail.com');
+		$this->email->to($to);
 		// Subject of email
-		$this->email->subject("contoh");
+		$this->email->subject("Kode OTP Registrasi GAWE");
 		// Message in email
-		$this->email->message("tes");
+		$this->email->message($msg);
 		// It returns boolean TRUE or FALSE based on success or failure
 		$this->email->send(); 
-
 		echo $this->email->print_debugger();
 	}
+
 
 	private function login_post()
 	{
