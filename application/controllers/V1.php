@@ -129,15 +129,17 @@ class V1 extends CI_Controller
 	}
 
 	function email_post(){
-		$config['protocol'] = 'smtp';
-		// SMTP Server Address for Gmail.
-		$config['smtp_host'] = 'ssl://smtp.googlemail.com';
-		// SMTP Port - the port that you is required
-		$config['smtp_port'] = 465;
-		// SMTP Username like. (abc@gmail.com)
-		$config['smtp_user'] = 'ananda.rifkiy33@gmail.com';
-		// SMTP Password like (abc***##)
-		$config['smtp_pass'] = 'wakwaw123';
+		$config = [
+			'mailtype'  => 'html',
+			'charset'   => 'utf-8',
+			'protocol'  => 'smtp',
+			'smtp_host' => 'ssl://smtp.gmail.com',
+			'smtp_user' => 'ananda.rifkiy33@gmail.com',    // Ganti dengan email gmail kamu
+			'smtp_pass' => 'wakwaw123',      // Password gmail kamu
+			'smtp_port' => 465,
+			'crlf'      => "\r\n",
+			'newline'   => "\r\n"
+		];
 		// Load email library and passing configured values to email library
 		$this->load->library('email', $config);
 		// Sender email address
