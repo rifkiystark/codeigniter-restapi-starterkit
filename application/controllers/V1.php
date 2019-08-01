@@ -123,7 +123,7 @@ class V1 extends CI_Controller
 				$unique_kode .= $characters[rand(0, $charactersLength - 1)];
 			}
 			
-			$iduser = $this->Usermodel->select_user($data)->rows('iduser');
+			$iduser = $this->Usermodel->select_user($data)->row('userId');
 			$verifdata = array (
 				'userId' => $iduser,
 				'code'	=> $unique_kode
