@@ -129,7 +129,7 @@ class V1 extends CI_Controller
 				'code'	=> $unique_kode
 			);
 
-			$this->Verifivationsmodel->insert($verifdata);
+			$this->Verificationsmodel->insert($verifdata);
 			$this->email($data['email'], $unique_kode);
 			
 
