@@ -132,7 +132,6 @@ class V1 extends CI_Controller
 			$this->Verificationsmodel->insert($verifdata);
 			$this->email($data['email'], $unique_kode);
 			
-
 			$response = [
 				'status' => 200,
 				'message' => 'Request Successful !'
@@ -204,6 +203,7 @@ class V1 extends CI_Controller
 
 		// if valid input
 		$data['email'] = $this->post('email');
+		$data['isVerifiedEmail'] = true;
 		$data['password'] = md5($this->post('password'));
 
 		$user = $this->Usermodel->select_user($data);
