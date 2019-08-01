@@ -130,38 +130,26 @@ class V1 extends CI_Controller
 
 	function email_post(){
 		$config['protocol'] = 'smtp';
+		// SMTP Server Address for Gmail.
 		$config['smtp_host'] = 'ssl://smtp.googlemail.com';
+		// SMTP Port - the port that you is required
 		$config['smtp_port'] = 465;
-		$config['mailtype'] = 'html';
+		// SMTP Username like. (abc@gmail.com)
 		$config['smtp_user'] = 'ananda.rifkiy33@gmail.com';
+		// SMTP Password like (abc***##)
 		$config['smtp_pass'] = '100%ganteng';
-            // Load email library and passing configured values to email library 
+		// Load email library and passing configured values to email library
 		$this->load->library('email', $config);
-		$this->email->set_newline("\r\n");
-            // Sender email address
-		$this->email->from('ananda.rifkiy33@gmail.com', 'GTC EduSite');
-            // Receiver email address
+		// Sender email address
+		$this->email->from('ananda.rifkiy33@gmail.com', 'ananda.rifkiy33@gmail.com');
+		//send multiple email
 		$this->email->to('ananda.rifkiy32@gmail.com');
-            // Subject of email
-		$this->email->subject('Verification GTC EduSite');
-            // Message in email
-		$message = '<html>
-		<link href="https://fonts.googleapis.com/css?family=Lato:700%7CMontserrat:400,600" rel="stylesheet">
-		<body style="font-family:"Montserrat", sans-serif;">
-		<center>
-		<div style="border: 1px solid black;padding: 20px;border-radius: 10px">
-		<h3>GTC EduSite</h3>
-		<p>Terimakasih sudah mendaftar. Tinggal satu tahap lagi untuk mengakses akun anda.</p>
-		</div>
-		</center>
-		</body>
-		</html>';
-		$this->email->message($message);
-		if ($this->email->send()) {
-			echo 'Email sent.';
-		} else {
-			show_error($this->email->print_debugger());
-		}
+		// Subject of email
+		$this->email->subject("contoh");
+		// Message in email
+		$this->email->message("tes");
+		// It returns boolean TRUE or FALSE based on success or failure
+		$this->email->send(); 
 	}
 
 	private function login_post()
