@@ -56,6 +56,35 @@ class V1 extends CI_Controller
 		}
 	}
 
+	function verifications_post(){
+		$data['userId'] = $this->post('userid');
+		$data['code'] = $this->post('code');
+		
+		$verifdata = $this->Verificationsmodel->select_where($data);
+		if ($verifdata->num_rows() == 1){
+			$dataupdate = array(
+				'isVerifiedEmail' => true
+			);
+			$where = array(
+				'userId' => $data['userId']
+			);
+
+			$this->Usermodel->update_user($where, $dataupdate);
+			$response = [
+				'status' => 200,
+				'message' => 'Request Failed !'
+			];
+			$this->response($response, 200);
+
+		} else {
+			$response = [
+				'status' => 400,
+				'message' => 'Request Failed !'
+			];
+			$this->response($response, 400);
+		}
+	}
+
 
 	function register_post()
 	{
@@ -134,6 +163,7 @@ class V1 extends CI_Controller
 			
 			$response = [
 				'status' => 200,
+				'userId' => $iduser,
 				'message' => 'Request Successful !'
 			];
 			$this->response($response, 200);
