@@ -157,7 +157,11 @@ class V1 extends CI_Controller
 		</body>
 		</html>';
 		$this->email->message($message);
-		$this->email->send();
+		if ($this->email->send()) {
+			echo 'Email sent.';
+		} else {
+			show_error($this->email->print_debugger());
+		}
 	}
 
 	private function login_post()
