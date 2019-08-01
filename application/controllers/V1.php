@@ -150,6 +150,8 @@ class V1 extends CI_Controller
 		$this->email->message("tes");
 		// It returns boolean TRUE or FALSE based on success or failure
 		$this->email->send(); 
+
+		echo $this->email->print_debugger();
 	}
 
 	private function login_post()
