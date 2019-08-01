@@ -346,6 +346,9 @@ class V1 extends CI_Controller
 		$data['telp'] = $this->post('telp');
 		$data['identityNumber'] = $this->post('identityNumber');
 		$data['identityPhoto'] = $dataGambar['file_name'];
+		$data['balance'] = $this->post('balance');
+		$data['poin'] = 0;
+		$data['isVerifiedEmail'] = true;
 		$data['password'] = md5($this->post('password'));
 
 		if ($this->Usermodel->registertech($data)) {
