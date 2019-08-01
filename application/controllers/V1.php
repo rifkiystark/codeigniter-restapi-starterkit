@@ -110,6 +110,7 @@ class V1 extends CI_Controller
 		$data['email'] = $this->post('email');
 		$data['name'] = $this->post('name');
 		$data['telp'] = $this->post('telp');
+		$data['isVerifiedEmail'] = false;
 		$data['password'] = md5($this->post('password'));
 
 		if ($this->Usermodel->register($data)) {
@@ -125,6 +126,39 @@ class V1 extends CI_Controller
 			];
 			$this->response($response, 400);
 		}
+	}
+
+	function email_post(){
+		$config['protocol'] = 'smtp';
+		$config['smtp_host'] = 'ssl://smtp.gmail.com';
+		$config['smtp_port'] = 465;
+		$config['mailtype'] = 'html';
+		$config['smtp_user'] = 'ananda.rifkiy33@gmail.com';
+		$config['smtp_pass'] = '100%ganteng';
+            // Load email library and passing configured values to email library 
+		$this->load->library('email', $config);
+		$this->email->set_newline("\r\n");
+            // Sender email address
+		$this->email->from('ananda.rifkiy33@gmail.com', 'GTC EduSite');
+            // Receiver email address
+		$this->email->to('ananda.rifkiy32@gmail.com');
+            // Subject of email
+		$this->email->subject('Verification GTC EduSite');
+            // Message in email
+		$message = '<html>
+		<link href="https://fonts.googleapis.com/css?family=Lato:700%7CMontserrat:400,600" rel="stylesheet">
+		<body style="font-family:"Montserrat", sans-serif;">
+		<center>
+		<div style="border: 1px solid black;padding: 20px;border-radius: 10px">
+		<h3>GTC EduSite</h3>
+		<p>Terimakasih sudah mendaftar. Tinggal satu tahap lagi untuk mengakses akun anda.</p>
+		<a href='.base_url().'homepage/verification/><button style="border:none;padding:12px 20px 12px 20px; background-color: green;color: white">Verifikasi Email</button></a>
+		</div>
+		</center>
+		</body>
+		</html>';
+		$this->email->message($message);
+		$this->email->send();
 	}
 
 	private function login_post()
