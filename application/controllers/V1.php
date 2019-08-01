@@ -234,23 +234,31 @@ class V1 extends CI_Controller
 
 		// if valid input
 		$data['email'] = $this->post('email');
-		$data['isVerifiedEmail'] = true;
 		$data['password'] = md5($this->post('password'));
 
 		$user = $this->Usermodel->select_user($data);
 		if ($user->num_rows() == 1) {
-			$tokenData = array(
-				'userId' => $user->row()->userId,
-				'email' => $user->row()->email,
-			);
-			$token = AUTHORIZATION::generateToken($tokenData);
-			$response = array(
-				'status' => 200,
-				'message' => 'Login Successful !',
-				'token' => $token
-			);
-
-			$this->response($response, 200);
+			if(!$user->row('isVerifiedEmail')){
+				$response = array(
+					'status' => 401,
+					'message' => 'Email not verified !',
+				);
+				$this->response($response, 401);
+			} else {
+				$tokenData = array(
+					'userId' => $user->row()->userId,
+					'email' => $user->row()->email,
+				);
+				$token = AUTHORIZATION::generateToken($tokenData);
+				$response = array(
+					'status' => 200,
+					'message' => 'Login Successful !',
+					'token' => $token
+				);
+	
+				$this->response($response, 200);
+			}
+			
 		} else {
 			$response = array(
 				'status' => 400,
