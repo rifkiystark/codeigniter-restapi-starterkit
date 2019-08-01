@@ -152,7 +152,6 @@ class V1 extends CI_Controller
 		<div style="border: 1px solid black;padding: 20px;border-radius: 10px">
 		<h3>GTC EduSite</h3>
 		<p>Terimakasih sudah mendaftar. Tinggal satu tahap lagi untuk mengakses akun anda.</p>
-		<a href='.base_url().'homepage/verification/><button style="border:none;padding:12px 20px 12px 20px; background-color: green;color: white">Verifikasi Email</button></a>
 		</div>
 		</center>
 		</body>
