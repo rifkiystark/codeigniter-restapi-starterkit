@@ -201,7 +201,7 @@ class V1 extends CI_Controller
 			  .email-masthead {
 				padding: 25px 0;
 				text-align: center;
-				background: #a882fc;
+				background: #827ffb;
 			  }
 			  .email-masthead_logo {
 				max-width: 400px;
