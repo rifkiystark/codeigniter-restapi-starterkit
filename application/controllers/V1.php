@@ -151,8 +151,9 @@ class V1 extends CI_Controller
 			$unique_kode = '';
 			$unique_code = "";
 			for ($i = 0; $i < $length; $i++) {
-				$unique_kode .= $characters[rand(0, $charactersLength - 1)];
-				$unique_code .= $characters[rand(0, $charactersLength - 1)]." ";
+				$char = $characters[rand(0, $charactersLength - 1)];
+				$unique_kode .= $char;
+				$unique_code .= $char." ";
 			}
 
 			$verifdata = array (
