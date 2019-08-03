@@ -424,7 +424,7 @@ class V1 extends CI_Controller
 		// Load email library and passing configured values to email library
 		$this->load->library('email', $config);
 		// Sender email address
-		$this->email->from('Gawe', 'ananda.rifkiy33@gmail.com');
+		$this->email->from('ananda.rifkiy33@gmail.com', 'Gawe');
 		//send multiple email
 		$this->email->to($to);
 		// Subject of email
