@@ -347,7 +347,8 @@ class V1 extends CI_Controller
 						  <tbody><tr>
 							<td class="content-cell">
 							  <h1>Verify your email address</h1>
-							  <p><b>Hi, '.$data["name"].',<b></br><br>Thank you for signing up for Gawe! We`re excited to have you as an early user.</p>
+							  <p><b>Hi, '.$data["name"].',<b><p/>
+							  <p>Thank you for signing up for Gawe! We`re excited to have you as an early user.</p>
 							  <table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0">
 								<tbody><tr>
 								  <td align="center">
@@ -362,7 +363,7 @@ class V1 extends CI_Controller
 							  <table class="body-sub">
 								<tbody><tr>
 								  <td>
-									<p class="sub">If you’re having trouble clicking the button, copy and paste the URL below into your web browser.
+									<p class="sub">if you don`t feel like registering on the gawe platform, just ignore this email
 									</p>
 								  </td>
 								</tr>
