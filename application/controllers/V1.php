@@ -201,6 +201,7 @@ class V1 extends CI_Controller
 			  .email-masthead {
 				padding: 25px 0;
 				text-align: center;
+				background: #a882fc;
 			  }
 			  .email-masthead_logo {
 				max-width: 400px;
@@ -334,7 +335,7 @@ class V1 extends CI_Controller
 					<!-- Logo -->
 					<tbody><tr>
 					  <td class="email-masthead">
-						<a class="email-masthead_name"><img src="https://gaweapi.azurewebsites.net/images/logo.png" style="width: 120px"></a>
+						<a class="email-masthead_name"><img src="https://gaweapi.azurewebsites.net/images/logo-white.png" style="width: 120px"></a>
 					  </td>
 					</tr>
 					<!-- Email Body -->
