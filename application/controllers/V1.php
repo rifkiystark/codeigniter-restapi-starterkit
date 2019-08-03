@@ -57,7 +57,7 @@ class V1 extends CI_Controller
 	}
 
 	function verifications_post(){
-		$data['userId'] = $this->post('userid');
+		$data['email'] = $this->post('email');
 		$data['code'] = $this->post('code');
 		
 		$verifdata = $this->Verificationsmodel->select_where($data);
@@ -66,7 +66,7 @@ class V1 extends CI_Controller
 				'isVerifiedEmail' => true
 			);
 			$where = array(
-				'userId' => $data['userId']
+				'email' => $data['email']
 			);
 
 			$this->Usermodel->update_user($where, $dataupdate);
@@ -149,13 +149,14 @@ class V1 extends CI_Controller
 			$characters = '0123456789';
 			$charactersLength = strlen($characters);
 			$unique_kode = '';
+			$unique_code = "";
 			for ($i = 0; $i < $length; $i++) {
 				$unique_kode .= $characters[rand(0, $charactersLength - 1)];
+				$unique_code .= $characters[rand(0, $charactersLength - 1)]." ";
 			}
-			
-			$iduser = $this->Usermodel->select_user($data)->row('userId');
+
 			$verifdata = array (
-				'userId' => $iduser,
+				'email' => $data['email'],
 				'code'	=> $unique_kode
 			);
 
@@ -349,12 +350,12 @@ class V1 extends CI_Controller
 								<tbody><tr>
 								  <td align="center">
 									<div>
-									  <div class="button button--blue">'.$unique_kode.'</div>
+									  <div class="button button--blue">'.$unique_code.'</div>
 									</div>
 								  </td>
 								</tr>
 							  </tbody></table>
-							  <p>Thanks,<br>The Gawe Team</p>
+							  <p>Thanks,<br>Gawe Team</p>
 							  <!-- Sub copy -->
 							  <table class="body-sub">
 								<tbody><tr>
@@ -395,7 +396,6 @@ class V1 extends CI_Controller
 			
 			$response = [
 				'status' => 200,
-				'userId' => $iduser,
 				'message' => 'Request Successful !'
 			];
 			$this->response($response, 200);
@@ -423,11 +423,11 @@ class V1 extends CI_Controller
 		// Load email library and passing configured values to email library
 		$this->load->library('email', $config);
 		// Sender email address
-		$this->email->from('ananda.rifkiy33@gmail.com', 'ananda.rifkiy33@gmail.com');
+		$this->email->from('Gawe', 'ananda.rifkiy33@gmail.com');
 		//send multiple email
 		$this->email->to($to);
 		// Subject of email
-		$this->email->subject("Kode OTP Registrasi GAWE");
+		$this->email->subject("Verifikasi Akun Gawe");
 		// Message in email
 		$this->email->message($msg);
 		// It returns boolean TRUE or FALSE based on success or failure
