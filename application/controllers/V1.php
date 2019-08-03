@@ -347,7 +347,7 @@ class V1 extends CI_Controller
 						  <tbody><tr>
 							<td class="content-cell">
 							  <h1>Verify your email address</h1>
-							  <p>Thanks for signing up for Gawe! We`re excited to have you as an early user.</p>
+							  <p>Hi!, '.$data["name"].',<br>Thank you for signing up for Gawe! We`re excited to have you as an early user.</p>
 							  <table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0">
 								<tbody><tr>
 								  <td align="center">
@@ -357,7 +357,7 @@ class V1 extends CI_Controller
 								  </td>
 								</tr>
 							  </tbody></table>
-							  <p>Thanks,<br>Gawe Team</p>
+							  <p>Thank you,<br>Gawe Team</p>
 							  <!-- Sub copy -->
 							  <table class="body-sub">
 								<tbody><tr>
