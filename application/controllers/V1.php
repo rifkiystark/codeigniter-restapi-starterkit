@@ -5,6 +5,11 @@ use Restserver\Libraries\REST_Controller;
 
 require APPPATH . '/libraries/REST_Controller.php';
 require APPPATH . '/libraries/Format.php';
+// First, run 'composer require pusher/pusher-php-server'
+
+require '././vendor/autoload.php';
+
+
 
 class V1 extends CI_Controller
 {
@@ -22,6 +27,7 @@ class V1 extends CI_Controller
 		$this->load->model(array('Usermodel', 'Techniciansmodel','Verificationsmodel'));
 		$this->load->helper(['jwt', 'authorization']);
 		$this->base_url = "http://localhost//gawe-api/";
+		
 	}
 
 
@@ -41,6 +47,7 @@ class V1 extends CI_Controller
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
 
+    
 	function validation_input($config, $data)
 	{
 		$this->form_validation->set_data($data);
@@ -54,6 +61,22 @@ class V1 extends CI_Controller
 			$this->response($response, 400);
 			exit();
 		}
+	}
+	
+	function tespusher_post(){
+	    $options = array(
+            'cluster' => 'ap1',
+            'useTLS' => true
+        );
+        $pusher = new Pusher\Pusher(
+            '86ae86846caf575fc32e',
+            '22dfb0816724f170230f',
+            '837299',
+            $options
+        );
+        
+        $data['message'] = 'hello world';
+        $pusher->trigger('my-channel', 'my-event', $data);
 	}
 
 	function verifications_post(){
