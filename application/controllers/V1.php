@@ -397,16 +397,16 @@ class V1 extends CI_Controller
 			$this->Verificationsmodel->insert($verifdata);
 			$this->email($data['email'], $msg);
 			
-			$response = [
+			$response = array(
 				'status' => 200,
-				'message' => 'Request Successful !'
-			];
+				'message' => 'Request Successful'
+			);
 			$this->response($response, 200);
 		} else {
-			$response = [
+			$response = array(
 				'status' => 400,
-				'message' => 'Request Failed !'
-			];
+				'message' => 'Request Failed'
+			);
 			$this->response($response, 400);
 		}
 	}
