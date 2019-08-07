@@ -744,7 +744,7 @@ class V1 extends CI_Controller
 		$this->upload->initialize($configUpload);
 		
 		if (!$this->upload->do_upload('photo1')) {
-			// do nothing
+			$error['photo1'] = array('error' => $this->upload->display_errors());
 		} else {
 			$dataGambar = $this->upload->data();
 			$img_name[$i] = $dataGambar['file_name'];
@@ -763,7 +763,7 @@ class V1 extends CI_Controller
 		$this->upload->initialize($configUpload);
 		
 		if (!$this->upload->do_upload('photo2')) {
-			// do nothing
+			$error['photo1'] = array('error' => $this->upload->display_errors());
 		} else {
 			$dataGambar = $this->upload->data();
 			$img_name[$i] = $dataGambar['file_name'];
@@ -783,7 +783,7 @@ class V1 extends CI_Controller
 		$this->upload->initialize($configUpload);
 		
 		if (!$this->upload->do_upload('photo3')) {
-			// do nothing
+			$error['photo1'] = array('error' => $this->upload->display_errors());
 		} else {
 			$dataGambar = $this->upload->data();
 			$img_name[$i] = $dataGambar['file_name'];
@@ -802,7 +802,8 @@ class V1 extends CI_Controller
 			$response = array(
 				'status'	=> 200,
 				'message'   => 'Success',
-				'data'		=> $order
+				'data'		=> $order,
+				'error'     => $error
 			);
 			$this->response($response, 200);
 		} else {
