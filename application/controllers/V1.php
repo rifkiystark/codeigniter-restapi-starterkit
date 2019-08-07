@@ -709,7 +709,7 @@ class V1 extends CI_Controller
 	}
 	
 	function order_post(){
-		$img_name[] = null;
+		$img_name = array();
 		$i = 0;
 		$data_user = $this->verify_request();
 		$config = [
@@ -747,8 +747,7 @@ class V1 extends CI_Controller
 			$error['photo1'] = array('error' => $this->upload->display_errors());
 		} else {
 			$dataGambar = $this->upload->data();
-			$img_name[$i] = $dataGambar['file_name'];
-			$i++;
+			array_push($img_name, $dataGambar['file_name']);
 		}
 		
 		$configUpload = array(
@@ -766,8 +765,7 @@ class V1 extends CI_Controller
 			$error['photo1'] = array('error' => $this->upload->display_errors());
 		} else {
 			$dataGambar = $this->upload->data();
-			$img_name[$i] = $dataGambar['file_name'];
-			$i++;
+			array_push($img_name, $dataGambar['file_name']);
 		}
 		
 		
@@ -786,8 +784,7 @@ class V1 extends CI_Controller
 			$error['photo1'] = array('error' => $this->upload->display_errors());
 		} else {
 			$dataGambar = $this->upload->data();
-			$img_name[$i] = $dataGambar['file_name'];
-			$i++;
+			array_push($img_name, $dataGambar['file_name']);
 		}
 
 		$order = array(
