@@ -748,11 +748,11 @@ class V1 extends CI_Controller
 			$this->upload->initialize($configUpload);
 	
 			if (!$this->upload->do_upload('photo2')) {
-				echo "photo2 null";
-				exit();
+				echo "photo2 null";exit();
 			} else {
 				$dataGambar = $this->upload->data();
 			}
+
 
 			$configUpload = array(
 				'upload_path' => "./identities/",
