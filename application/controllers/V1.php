@@ -717,13 +717,14 @@ class V1 extends CI_Controller
 		$data = $this->input->post();
 		$this->validation_input($config, $data);
 
-		if ($data['photo1'] != null){
+		$photo1 = $this->post('photo1');
+		if ($photo1 != null){
 			$configUpload = array(
 				'upload_path' => "./identities/",
 				'allowed_types' => "jpg|png|jpeg",
 				'overwrite' => TRUE,
 				'max_size' => "4096",
-				'file_name' => $data['photo1']
+				'file_name' => $photo1
 			);
 	
 			$this->load->library('upload', $configUpload);
@@ -739,13 +740,14 @@ class V1 extends CI_Controller
 			}
 		}
 
-		if ($data['photo2'] != null){
+		$photo2 = $this->post('photo2');
+		if ($photo2 != null){
 			$configUpload = array(
 				'upload_path' => "./identities/",
 				'allowed_types' => "jpg|png|jpeg",
 				'overwrite' => TRUE,
 				'max_size' => "4096",
-				'file_name' => $data['photo2']
+				'file_name' => $photo2
 			);
 	
 			$this->load->library('upload', $configUpload);
@@ -761,13 +763,14 @@ class V1 extends CI_Controller
 			}
 		}
 
-		if ($data['photo3'] != null){
+		$photo3 = $this->post('photo3');
+		if ($photo3 != null){
 			$configUpload = array(
 				'upload_path' => "./identities/",
 				'allowed_types' => "jpg|png|jpeg",
 				'overwrite' => TRUE,
 				'max_size' => "4096",
-				'file_name' => $data['photo3']
+				'file_name' => $photo3
 			);
 	
 			$this->load->library('upload', $configUpload);
