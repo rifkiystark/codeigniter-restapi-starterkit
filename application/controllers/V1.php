@@ -76,7 +76,7 @@ class V1 extends CI_Controller
         );
         
         $data['message'] = 'hello world';
-        $pusher->trigger('my-channel', 'my-event', $data);
+        $pusher->trigger('tes', 'my-event', $data);
 	}
 
 	function verifications_post(){
@@ -561,6 +561,7 @@ class V1 extends CI_Controller
 			$status = 401;
 			$response = ['status' => $status, 'msg' => 'Unauthorized Access! '];
 			$this->response($response, $status);
+			exit();
 		}
 	}
 
@@ -700,6 +701,86 @@ class V1 extends CI_Controller
 				'message' => 'Request Failed !'
 			];
 			$this->response($response, 400);
+		}
+	}
+
+	function order_post(){
+		$data_user = $this->verify_request();
+		$config = [
+			[
+				'field' => 'description',
+				'label' => 'Description',
+				'rules' => 'required',
+			],
+		];
+
+		$data = $this->input->post();
+		$this->validation_input($config, $data);
+
+		if ($data['photo1'] != null){
+			$configUpload = array(
+				'upload_path' => "./identities/",
+				'allowed_types' => "jpg|png|jpeg",
+				'overwrite' => TRUE,
+				'max_size' => "4096",
+				'file_name' => $data['photo1']
+			);
+	
+			$this->load->library('upload', $configUpload);
+			$this->upload->initialize($configUpload);
+	
+			if (!$this->upload->do_upload('photo1')) {
+				$error = array('error' => $this->upload->display_errors());
+	
+				$this->response($error, 400);
+				exit();
+			} else {
+				$dataGambar = $this->upload->data();
+			}
+		}
+
+		if ($data['photo2'] != null){
+			$configUpload = array(
+				'upload_path' => "./identities/",
+				'allowed_types' => "jpg|png|jpeg",
+				'overwrite' => TRUE,
+				'max_size' => "4096",
+				'file_name' => $data['photo2']
+			);
+	
+			$this->load->library('upload', $configUpload);
+			$this->upload->initialize($configUpload);
+	
+			if (!$this->upload->do_upload('photo2')) {
+				$error = array('error' => $this->upload->display_errors());
+	
+				$this->response($error, 400);
+				exit();
+			} else {
+				$dataGambar = $this->upload->data();
+			}
+		}
+
+		if ($data['photo3'] != null){
+			$configUpload = array(
+				'upload_path' => "./identities/",
+				'allowed_types' => "jpg|png|jpeg",
+				'overwrite' => TRUE,
+				'max_size' => "4096",
+				'file_name' => $data['photo3']
+			);
+	
+			$this->load->library('upload', $configUpload);
+			$this->upload->initialize($configUpload);
+	
+			if (!$this->upload->do_upload('photo3')) {
+				$error = array('error' => $this->upload->display_errors());
+	
+				$this->response($error, 400);
+				exit();
+			} else {
+				$dataGambar = $this->upload->data();
+			}
 		}
 	}
 }
