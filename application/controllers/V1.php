@@ -733,7 +733,7 @@ class V1 extends CI_Controller
 		}
 
 		$configUpload = array(
-			'upload_path' => "./identities/",
+			'upload_path' => "./orders/",
 			'allowed_types' => "jpg|png|jpeg",
 			'overwrite' => TRUE,
 			'max_size' => "4096",
@@ -772,7 +772,7 @@ class V1 extends CI_Controller
 		
 		
 		$configUpload = array(
-			'upload_path' => "./identities/",
+			'upload_path' => "./orders/",
 			'allowed_types' => "jpg|png|jpeg",
 			'overwrite' => TRUE,
 			'max_size' => "4096",
