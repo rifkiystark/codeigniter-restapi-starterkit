@@ -709,7 +709,7 @@ class V1 extends CI_Controller
 	}
 	
 	function order_post(){
-		$img_name = [];
+		$img_name[] = null;
 		$i = 0;
 		$data_user = $this->verify_request();
 		$config = [
