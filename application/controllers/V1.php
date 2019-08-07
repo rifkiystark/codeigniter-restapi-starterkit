@@ -716,80 +716,59 @@ class V1 extends CI_Controller
 
 		$data = $this->input->post();
 		$this->validation_input($config, $data);
-
-		$photo1 = $this->post('photo1');
-		if ($photo1 != null){
+		
 			$configUpload = array(
 				'upload_path' => "./identities/",
 				'allowed_types' => "jpg|png|jpeg",
 				'overwrite' => TRUE,
 				'max_size' => "4096",
-				'file_name' => $photo1
+				'file_name' => "photo1.png"
 			);
 	
 			$this->load->library('upload', $configUpload);
 			$this->upload->initialize($configUpload);
 	
 			if (!$this->upload->do_upload('photo1')) {
-				$error = array('error' => $this->upload->display_errors());
-	
-				$this->response($error, 400);
-				exit();
+				echo "photo 1 null";
 			} else {
 				$dataGambar = $this->upload->data();
 			}
-		} else {
-			echo "photo1 null";
-		}
 
-		$photo2 = $this->post('photo2');
-		if ($photo2 != null){
+
+
 			$configUpload = array(
 				'upload_path' => "./identities/",
 				'allowed_types' => "jpg|png|jpeg",
 				'overwrite' => TRUE,
 				'max_size' => "4096",
-				'file_name' => $photo2
+				'file_name' => "photo 2"
 			);
 	
 			$this->load->library('upload', $configUpload);
 			$this->upload->initialize($configUpload);
 	
 			if (!$this->upload->do_upload('photo2')) {
-				$error = array('error' => $this->upload->display_errors());
-	
-				$this->response($error, 400);
+				echo "photo2 null";
 				exit();
 			} else {
 				$dataGambar = $this->upload->data();
 			}
-		} else {
-			echo "photo2 null";
-		}
 
-		$photo3 = $this->post('photo3');
-		if ($photo3 != null){
 			$configUpload = array(
 				'upload_path' => "./identities/",
 				'allowed_types' => "jpg|png|jpeg",
 				'overwrite' => TRUE,
 				'max_size' => "4096",
-				'file_name' => $photo3
+				'file_name' => "photo 3"
 			);
 	
 			$this->load->library('upload', $configUpload);
 			$this->upload->initialize($configUpload);
 	
 			if (!$this->upload->do_upload('photo3')) {
-				$error = array('error' => $this->upload->display_errors());
-	
-				$this->response($error, 400);
-				exit();
+				echo "photo3 null";
 			} else {
 				$dataGambar = $this->upload->data();
 			}
-		} else {
-			echo "photo3 null";
-		}
 	}
 }
