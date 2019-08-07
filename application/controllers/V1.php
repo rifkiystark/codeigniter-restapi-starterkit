@@ -738,6 +738,8 @@ class V1 extends CI_Controller
 			} else {
 				$dataGambar = $this->upload->data();
 			}
+		} else {
+			echo "photo1 null";
 		}
 
 		$photo2 = $this->post('photo2');
@@ -761,6 +763,8 @@ class V1 extends CI_Controller
 			} else {
 				$dataGambar = $this->upload->data();
 			}
+		} else {
+			echo "photo2 null";
 		}
 
 		$photo3 = $this->post('photo3');
@@ -784,6 +788,8 @@ class V1 extends CI_Controller
 			} else {
 				$dataGambar = $this->upload->data();
 			}
+		} else {
+			echo "photo3 null";
 		}
 	}
 }
