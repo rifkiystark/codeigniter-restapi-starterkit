@@ -732,60 +732,65 @@ class V1 extends CI_Controller
 			$order_code .= $char;
 		}
 
+
+
+		//	upload for image1
 		$configUpload = array(
 			'upload_path' => "./orders/",
 			'allowed_types' => "jpg|png|jpeg",
 			'overwrite' => TRUE,
 			'max_size' => "4096",
-			'file_name' => $order_code."_1.png"
+			'file_name' => $order_code."_1"
 		);
-		
 		$this->load->library('upload', $configUpload);
 		$this->upload->initialize($configUpload);
-		
 		if (!$this->upload->do_upload('photo1')) {
-			$error['photo1'] = array('error' => $this->upload->display_errors());
+			$error['photo1'] = $this->upload->display_errors();
 		} else {
 			$dataGambar = $this->upload->data();
 			array_push($img_name, $dataGambar['file_name']);
 		}
 		
+
+
+		//	upload for image2
 		$configUpload = array(
 			'upload_path' => "./orders/",
 			'allowed_types' => "jpg|png|jpeg",
 			'overwrite' => TRUE,
 			'max_size' => "4096",
-			'file_name' => $order_code."_2.png"
+			'file_name' => $order_code."_2"
 		);
-		
 		$this->load->library('upload', $configUpload);
 		$this->upload->initialize($configUpload);
-		
 		if (!$this->upload->do_upload('photo2')) {
-			$error['photo1'] = array('error' => $this->upload->display_errors());
+			$error['photo2'] = $this->upload->display_errors();
 		} else {
 			$dataGambar = $this->upload->data();
 			array_push($img_name, $dataGambar['file_name']);
 		}
 		
 		
+
+		//	upload for image3
 		$configUpload = array(
 			'upload_path' => "./orders/",
 			'allowed_types' => "jpg|png|jpeg",
 			'overwrite' => TRUE,
 			'max_size' => "4096",
-			'file_name' => $order_code."_3.png"
+			'file_name' => $order_code."_3"
 		);
-		
 		$this->load->library('upload', $configUpload);
 		$this->upload->initialize($configUpload);
-		
 		if (!$this->upload->do_upload('photo3')) {
-			$error['photo1'] = array('error' => $this->upload->display_errors());
+			$error['photo3'] = $this->upload->display_errors();
 		} else {
 			$dataGambar = $this->upload->data();
 			array_push($img_name, $dataGambar['file_name']);
 		}
+
+
+
 
 		$order = array(
 			'customerId' 	=> $data_user->userId,
@@ -794,7 +799,6 @@ class V1 extends CI_Controller
 			'orderCode'		=> $order_code,
 			'photos'		=> json_encode($img_name)
 		);
-
 		if ($this->Ordermodel->insert($order)){
 			$response = array(
 				'status'	=> 200,

@@ -75,8 +75,8 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'gawe.mysql.database.azure.com',
-	'username' => 'rifkiystark@gawe',
+	'hostname' => 'localhost',
+	'username' => 'rifkiystark',
 	'password' => 'Wakwaw123;',
 	'database' => 'gawedb',
 	'dbdriver' => 'mysqli',
