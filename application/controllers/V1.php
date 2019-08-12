@@ -24,7 +24,7 @@ class V1 extends CI_Controller
 		// Construct the parent class
 		parent::__construct();
 		$this->__resTraitConstruct();
-		$this->load->model(array('Usermodel', 'Techniciansmodel','Verificationsmodel','Ordermodel'));
+		$this->load->model(array('Usermodel', 'Techniciansmodel','Verificationsmodel','Ordermodel','Tempordermodel'));
 		$this->load->helper(['jwt', 'authorization']);
 		$this->base_url = "http://localhost//gawe-api/";
 		
@@ -491,6 +491,71 @@ class V1 extends CI_Controller
 		// if valid input
 		$data['email'] = $this->post('email');
 		$data['password'] = md5($this->post('password'));
+		$data['role'] = "customer";
+		
+		$user = $this->Usermodel->select_user($data);
+		if ($user->num_rows() == 1) {
+			if(!$user->row('isVerifiedEmail')){
+				$response = array(
+					'status' => 401,
+					'message' => 'Email not verified !',
+				);
+				$this->response($response, 401);
+			} else {
+				$tokenData = array(
+					'userId' => $user->row()->userId,
+					'email' => $user->row()->email,
+				);
+				$token = AUTHORIZATION::generateToken($tokenData);
+				$response = array(
+					'status' => 200,
+					'message' => 'Login Successful !',
+					'token' => $token
+				);
+				
+				$this->response($response, 200);
+			}
+			
+		} else {
+			$response = array(
+				'status' => 400,
+				'message' => 'Email or Password did not match !'
+			);
+			$this->response($response, 400);
+		}
+	}
+
+	private function logintech_post()
+	{
+		$config = [
+			[
+				'field' => 'email',
+				'label' => 'Email',
+				'rules' => 'required|max_length[50]|valid_email',
+				'errors' => [
+					'required' => 'We need both username and password',
+					'max_length' => 'Maximum Email length is 50 characters',
+					'valid_email' => 'Email not valid',
+				],
+			],
+			[
+				'field' => 'password',
+				'label' => 'Password',
+				'rules' => 'required',
+				'errors' => [
+					'required' => 'You must provide a Password.',
+				],
+			],
+		];
+		
+		$data = $this->input->post();
+		
+		$this->validation_input($config, $data);
+		
+		// if valid input
+		$data['email'] = $this->post('email');
+		$data['password'] = md5($this->post('password'));
+		$data['role'] = "technician";
 		
 		$user = $this->Usermodel->select_user($data);
 		if ($user->num_rows() == 1) {
@@ -803,8 +868,7 @@ class V1 extends CI_Controller
 			$response = array(
 				'status'	=> 200,
 				'message'   => 'Success',
-				'data'		=> $order,
-				'error'     => $error
+				'data'		=> $order
 			);
 			$this->response($response, 200);
 		} else {
@@ -812,6 +876,49 @@ class V1 extends CI_Controller
 				'status'	=> 400,
 				'message'   => 'Failed'
 			);
+			$this->response($response, 400);
+		}
+	}
+
+	function bidorder_post(){
+		$data_user = $this->verify_request();
+		$config = [
+			[
+				'field' => 'ordercode',
+				'label' => 'Order Code',
+				'rules' => 'required',
+			],
+		];
+		$validationData = $this->input->post();
+		$this->validation_input($config, $validationData);
+		$validationData['status'] = "Menunggu";
+		if ($this->Ordermodel->select_where($validationData)->num_rows() < 1) {
+			$response = array (
+				'status'	=> 400,
+				'message'	=> "Order Code Not Valid !"
+			);
+
+			$this->response($response, 400);
+			exit();
+		}
+
+		$data['technicianId'] = $data_user->userId;
+		$data['orderCode'] = $this->post("ordercode");
+		
+
+		if ($this->Tempordermodel->insert($data)) {
+			$response = array (
+				'status'	=> 200,
+				'message'	=> "Request Successful !"
+			);
+
+			$this->response($response, 200);
+		} else {
+			$response = array (
+				'status'	=> 400,
+				'message'	=> "Bad Request !"
+			);
+
 			$this->response($response, 400);
 		}
 	}
