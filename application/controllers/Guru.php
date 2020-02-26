@@ -63,25 +63,16 @@ class Guru extends CI_Controller
 		$data['password'] = md5($this->post('password'));
 
 		$dataLogin = $this->GuruModel->get_where($data);
-		$dataResponse['wali'] = [
-			'email' => $dataLogin->row('email'),
-			'nama' => $dataLogin->row('nama'),
-			'jenkel' => $dataLogin->row('jenkel')
-		];
-		$dataResponse['siswa'] = [];
-		$dataToken['wali'] = $dataLogin->row('id_wali');
-		$dataToken['siswa'] = [];
+
+
 		if ($dataLogin->num_rows() > 0) {
-			$where = [
-				'id_wali' => $dataLogin->row('id_wali')
+			$dataResponse['wali'] = [
+				'email' => $dataLogin->row('email'),
+				'nama' => $dataLogin->row('nama'),
+				'jenkel' => $dataLogin->row('jenkel')
 			];
-			$dataSiswa = $this->MasterSiswaModel->get_where($where)->result();
-			foreach ($dataSiswa as $siswa) {
-				array_push($dataToken['siswa'], $siswa->id_master_siswa);
-				unset($siswa->id_master_siswa);
-				unset($siswa->id_wali);
-				array_push($dataResponse['siswa'], $siswa);
-			}
+
+			$dataToken['wali'] = $dataLogin->row('id_wali');
 
 			$token = AUTHORIZATION::generateToken($dataToken);
 			$dataResponse['token'] = $token;
