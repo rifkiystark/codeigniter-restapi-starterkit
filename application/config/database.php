@@ -75,8 +75,8 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'rifkiystark',
+	'hostname' => 'recekdb.mysql.database.azure.com',
+	'username' => 'rifkiystark@recekdb',
 	'password' => 'Wakwaw123;',
 	'database' => 'recekdb',
 	'dbdriver' => 'mysqli',
