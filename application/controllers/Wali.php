@@ -26,7 +26,7 @@ class Wali extends CI_Controller
 		// Construct the parent class
 		parent::__construct();
 		$this->__resTraitConstruct();
-		$this->load->model(array('WaliModel', 'MasterSiswaModel'));
+		$this->load->model(array('WaliModel', 'MasterSiswaModel', 'SiswaModel', 'KelasModel', 'MasterKelasModel'));
 		$this->load->helper(['jwt', 'authorization', 'Validator']);
 	}
 
@@ -75,12 +75,32 @@ class Wali extends CI_Controller
 			$where = [
 				'id_wali' => $dataLogin->row('id_wali')
 			];
-			$dataSiswa = $this->MasterSiswaModel->get_where($where)->result();
-			foreach ($dataSiswa as $siswa) {
-				array_push($dataToken['siswa'], $siswa->id_master_siswa);
-				unset($siswa->id_master_siswa);
-				unset($siswa->id_wali);
-				array_push($dataResponse['siswa'], $siswa);
+			$masterSiswaList = $this->MasterSiswaModel->get_where($where)->result();
+			foreach ($masterSiswaList as $masterSiswa) {
+				$siswa = $this->SiswaModel->get_where(
+					array(
+						'id_siswa' => $masterSiswa->id_master_siswa
+					)
+				);
+
+				$kelas = $this->KelasModel->get_where(array("id_kelas" => $siswa->row('id_kelas')));
+
+				$dataSiswa['nama'] = $masterSiswa->nama;
+				$dataSiswa['nis'] = $masterSiswa->nis;
+				$dataSiswa['tahun_ajaran'] = $kelas->row("tahun_ajaran");
+				$dataSiswa['kelas'] = $this->MasterKelasModel->get_where(array('id_master_kelas' => $kelas->row('id_master_kelas')))->row('kelas');
+				// echo json_encode($dataSiswa);
+				// exit();
+
+
+
+
+				array_push($dataToken['siswa'], $masterSiswa->id_master_siswa);
+
+				// unset($siswa->id_master_siswa);
+				// unset($siswa->id_wali);
+
+				array_push($dataResponse['siswa'], $dataSiswa);
 			}
 
 			$token = AUTHORIZATION::generateToken($dataToken);

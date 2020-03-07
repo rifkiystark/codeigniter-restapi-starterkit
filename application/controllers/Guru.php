@@ -66,7 +66,7 @@ class Guru extends CI_Controller
 
 
 		if ($dataLogin->num_rows() > 0) {
-			$dataResponse['wali'] = [
+			$dataResponse['guru'] = [
 				'email' => $dataLogin->row('email'),
 				'nama' => $dataLogin->row('nama'),
 				'jenkel' => $dataLogin->row('jenkel')
