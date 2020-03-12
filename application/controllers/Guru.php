@@ -26,8 +26,9 @@ class Guru extends CI_Controller
 		// Construct the parent class
 		parent::__construct();
 		$this->__resTraitConstruct();
-		$this->load->model(array('GuruModel', 'MasterSiswaModel'));
+		$this->load->model(array('GuruModel', 'MasterSiswaModel', 'JadwalModel', 'KelasModel'));
 		$this->load->helper(['jwt', 'authorization', 'Validator']);
+		$this->days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
 	}
 
 	function index()
@@ -37,16 +38,11 @@ class Guru extends CI_Controller
 
 	function upload_post()
 	{
-		header("Access-Control-Allow-Origin: *");
 		$this->response(["Status" => 200], 200);
 	}
 
 	function login_post()
 	{
-		header("Access-Control-Allow-Origin: *");
-		header("Access-Control-Expose-Headers: Content-Length, X-JSON");
-		header("Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS");
-		header("Access-Control-Allow-Headers: *");
 
 		$this->form_validation->set_data($this->post());
 		$this->form_validation->set_rules(Validator::Login());
@@ -84,5 +80,39 @@ class Guru extends CI_Controller
 			];
 			$this->response($response, 400);
 		}
+	}
+
+	function jadwal_get()
+	{
+		$hari = $this->get('hari');
+		if ($hari) {
+
+			$this->response(
+				$this->JadwalModel->getJadwal(1, $hari)->result(),
+				200
+			);
+		} else {
+			$schedules = [];
+			foreach ($this->days as $day) {
+				$schedules[$day] = $this->JadwalModel->getJadwal(1, $day)->result();
+			}
+			$this->response(
+				$schedules,
+				200
+			);
+		}
+	}
+
+	function kelas_get()
+	{
+		$dataKelas = $this->KelasModel->getKelas(1)->result();
+		$kelas['kelas'] = [];
+		foreach ($dataKelas as $kl) {
+			array_push($kelas['kelas'], $kl->kelas);
+		}
+		$this->response(
+			$kelas,
+			200
+		);
 	}
 }
