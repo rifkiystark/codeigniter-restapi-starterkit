@@ -1,9 +1,9 @@
 <?php
-class KelasModel extends CI_Model
+class MasterKehadiranModel extends CI_Model
 {
     function __construct()
     {
-        $this->table = 'Kelas';
+        $this->table = 'Master_Kehadiran';
     }
 
 

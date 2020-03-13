@@ -26,7 +26,7 @@ class Guru extends CI_Controller
 		// Construct the parent class
 		parent::__construct();
 		$this->__resTraitConstruct();
-		$this->load->model(array('GuruModel', 'MasterSiswaModel', 'JadwalModel', 'KelasModel'));
+		$this->load->model(array('GuruModel', 'MasterSiswaModel', 'JadwalModel', 'KelasModel', 'SiswaModel', 'MasterKehadiranModel', 'KehadiranModel'));
 		$this->load->helper(['jwt', 'authorization', 'Validator']);
 		$this->days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
 	}
@@ -108,11 +108,63 @@ class Guru extends CI_Controller
 		$dataKelas = $this->KelasModel->getKelas(1)->result();
 		$kelas['kelas'] = [];
 		foreach ($dataKelas as $kl) {
-			array_push($kelas['kelas'], $kl->kelas);
+
+			array_push($kelas['kelas'], array("id" => $kl->id_kelas, "kelas" => $kl->kelas));
 		}
 		$this->response(
 			$kelas,
 			200
 		);
+	}
+
+	function siswa_get()
+	{
+		$idKelas = $this->get('kelas');
+
+
+		$dataSiswa = $this->SiswaModel->getSiswa($idKelas)->result();
+		$this->response($dataSiswa, 200);
+	}
+
+	function kehadiran_post()
+	{
+		$idMapel = $this->post('mapel');
+		$masterKehadiran = array(
+			'id_mapel' => 1,
+			'tanggal' => date('Y-m-d')
+		);
+
+
+		$kehadiran = json_decode($this->post('kehadiran'));
+		foreach ($kehadiran->data as $khdrn) {
+			if (!(isset($khdrn->id_siswa) && isset($khdrn->kehadiran))) {
+				$response = array(
+					"msg" => "request tidak valid"
+				);
+				$this->response($response, 400);
+				exit();
+			}
+		}
+
+		if ($this->MasterKehadiranModel->insert($masterKehadiran) == 1) {
+			$idMasterKehadiran = $this->MasterKehadiranModel->get_where($masterKehadiran)->row('id_master_kehadiran');
+		}
+
+		foreach ($kehadiran->data as $khdrn) {
+			$dataKehadiran = array(
+				'id_master_kehadiran' => $idMasterKehadiran,
+				'id_siswa' => $khdrn->id_siswa,
+				'kehadiran' => $khdrn->kehadiran
+			);
+
+			$this->KehadiranModel->insert($dataKehadiran);
+		}
+
+		$response = array(
+			'status' => 'success',
+			'msg' => 'Kehadiran berhasil di kirim',
+			'data' => array()
+		);
+		$this->response($response, 400);
 	}
 }
